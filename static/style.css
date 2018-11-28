@@ -1,0 +1,14 @@
+.bordright {
+	border-right: 1px solid black;
+	height: 100%;
+}
+.bordleft {
+	border-left: 1px solid black;
+	height: 100%;
+}
+
+.cover {
+	position: absolute;
+	height: 100%;
+	width:	100%;
+}

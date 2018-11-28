@@ -10,7 +10,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="luis.css">
+    <link rel= "stylesheet" type="text/css" href="{{ url_for('static',filename='style.css') }}">
 
     <title>Hello, world!</title>
   </head>
@@ -19,10 +19,9 @@
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <ul class="nav navbar-nav">
-          <li class="active"><a href="#">DataWeeb</a></li>
-          <li><a href="#">Manga</a></li>
-          <li><a href="#">Anime</a></li>
-          <li><a href="#">About</a></li>
+          <li class="active"><a href="/">DataWeeb</a></li>
+          <li><a href="manga">Manga</a></li>
+          <li><a href="about">About</a></li>
         </ul>
         <form class="navbar-form navbar-right" action="/action_page.php">
           <div class="form-group">
@@ -36,14 +35,7 @@
     </nav>
 
     <div class="container-fluid" style="margin-top:50px">
-      <div class="row">
-        <div class="col-md-6 text-center right-divide">
-          {% block content %}{% endblock content %}
-        </div>
-        <div class="col-md-6 text-center left-divide">
-          {% block oof %}{% endblock oof %}
-        </div>
-      </div>
+      {% block content %}{% endblock content %}
     </div>
 
   </body>
