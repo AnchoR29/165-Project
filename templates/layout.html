@@ -12,14 +12,14 @@
 
     <link rel= "stylesheet" type="text/css" href="{{ url_for('static',filename='style.css') }}">
 
-    <title>Hello, world!</title>
+    <title>DataWeeb</title>
   </head>
   <body>
 
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <ul class="nav navbar-nav">
-          <li class="active"><a href="/">DataWeeb</a></li>
+          <li class="active"><a href="/anime">DataWeeb</a></li>
           <li><a href="manga">Manga</a></li>
           <li><a href="about">About</a></li>
         </ul>
@@ -31,10 +31,13 @@
             <i class="glyphicon glyphicon-search"></i>
           </button>
         </form>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/">Logout</a></li>
+        </ul>
       </div>
     </nav>
 
-    <div class="container-fluid" style="margin-top:50px">
+    <div class="container-fluid cover" style="margin-top:50px">
       {% block content %}{% endblock content %}
     </div>
 

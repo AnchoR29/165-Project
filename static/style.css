@@ -1,14 +1,19 @@
-.bordright {
-	border-right: 1px solid black;
-	height: 100%;
-}
-.bordleft {
-	border-left: 1px solid black;
-	height: 100%;
-}
-
 .cover {
+	background-color: gray;
 	position: absolute;
 	height: 100%;
 	width:	100%;
+}
+
+.login {
+	margin-top: 5%;
+    background-color: lightblue;
+    vertical-align: middle;
+
+   	border-right: 1px solid black; 
+   	border-left: 1px solid black;
+   	border-top: 1px solid black; 
+   	border-bottom: 1px solid black;
+
+   	padding-bottom: 2%;
 }
