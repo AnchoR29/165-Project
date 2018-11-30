@@ -19,9 +19,10 @@
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <ul class="nav navbar-nav">
-          <li class="active"><a href="/anime">DataWeeb</a></li>
-          <li><a href="manga">Manga</a></li>
-          <li><a href="about">About</a></li>
+          <li class="active"><a href="/">DataWeeb</a></li>
+          <li><a href="{{ url_for('anime')}}">Anime</a></li>
+          <li><a href="{{ url_for('manga')}}">Manga</a></li>
+          <li><a href="{{ url_for('about')}}">About</a></li>
         </ul>
         <form class="navbar-form navbar-right" action="/action_page.php">
           <div class="form-group">
@@ -32,12 +33,27 @@
           </button>
         </form>
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="/">Logout</a></li>
+              {% if current_user.is_authenticated %}
+                <li><a class="nav-item nav-link" href="{{ url_for('account') }}">{{current_user.username}}</a></li>
+                <li><a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+              {% else %}
+                <li><a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a></li>
+                <li><a class="nav-item nav-link" href="{{ url_for('signup') }}">Sign Up</a></li>
+              {% endif %}
         </ul>
       </div>
     </nav>
 
     <div class="container-fluid cover" style="margin-top:50px">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
       {% block content %}{% endblock content %}
     </div>
 
