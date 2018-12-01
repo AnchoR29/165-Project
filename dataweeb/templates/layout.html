@@ -34,6 +34,8 @@
         </form>
         <ul class="nav navbar-nav navbar-right">
               {% if current_user.is_authenticated %}
+                <li><a class="nav-item nav-link" href="{{ url_for('new_anime') }}">Add Anime</a></li>
+                <li><a class="nav-item nav-link" href="{{ url_for('new_manga') }}">Add Manga</a></li>
                 <li><a class="nav-item nav-link" href="{{ url_for('account') }}">{{current_user.username}}</a></li>
                 <li><a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a></li>
               {% else %}

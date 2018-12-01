@@ -1,10 +1,10 @@
 import os
 import secrets
 from PIL import Image
-from flask import render_template, url_for, flash, redirect, request
+from flask import render_template, url_for, flash, redirect, request, abort
 from dataweeb import app, db, bcrypt
-from dataweeb.forms import RegistrationForm, LoginForm, UpdateAccountForm
-from dataweeb.models import User
+from dataweeb.forms import *
+from dataweeb.models import User,Anime, Manga
 from flask_login import login_user, current_user, logout_user, login_required
 
 
@@ -16,7 +16,7 @@ def index():
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('index'))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -81,11 +81,108 @@ def account():
 
 @app.route("/anime")
 def anime():
-    return render_template('anime.html')
+    anime = Anime.query.all()
+    return render_template('anime.html', anime=anime)
+
+@app.route("/anime/new", methods=['GET', 'POST'])
+@login_required
+def new_anime():
+    form = AddAnime()
+    if form.validate_on_submit():
+        post = Anime(title=form.title.data, premiered=form.premiered.data, anime_type = form.anime_type.data, episodes=form.episodes.data, rating = form.rating.data, studio = form.studio.data )
+        db.session.add(post)
+        db.session.commit()
+        flash('Your post has been created!', 'success')
+        return redirect(url_for('anime'))
+    return render_template('addanime.html', title='New Anime',
+                           form=form, legend='New Post')
+
+@app.route("/anime/<int:anime_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_anime(anime_id):
+    post = Anime.query.get_or_404(anime_id)
+    form = UpdateAnime()
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.premiered=form.premiered.data
+        post.anime_type = form.anime_type.data
+        post.episodes=form.episodes.data
+        post.rating = form.rating.data
+        post.studio = form.studio.data
+        db.session.commit()
+        flash('Your post has been updated!', 'success')
+        return redirect(url_for('anime'))
+    elif request.method == 'GET':
+        form.title.data = post.title
+        form.premiered.data = post.premiered
+        form.anime_type.data = post.anime_type
+        form.episodes.data = post.episodes
+        form.rating.data = post.rating
+        form.studio.data = post.studio
+    return render_template('addanime.html', title='Update Post',
+                           form=form, legend='Update Post')
+
+
+@app.route("/anime/<int:anime_id>/delete", methods=['POST'])
+@login_required
+def delete_anime(anime_id):
+    post = Anime.query.get_or_404(anime_id)
+    db.session.delete(post)
+    db.session.commit()
+    flash('Your post has been deleted!', 'success')
+    return redirect(url_for('anime'))
+
 
 @app.route("/manga")
 def manga():
-    return render_template('manga.html')    
+    manga = Manga.query.all()
+    return render_template('manga.html', manga=manga)  
+
+@app.route("/manga/new", methods=['GET', 'POST'])
+@login_required
+def new_manga():
+    form = AddManga()
+    if form.validate_on_submit():
+        post = Manga(title=form.title.data, premiered=form.premiered.data, status = form.status.data, rating = form.rating.data, author = form.author.data )
+        db.session.add(post)
+        db.session.commit()
+        flash('Your post has been created!', 'success')
+        return redirect(url_for('manga'))
+    return render_template('addmanga.html', title='New Manga',
+                           form=form, legend='New Post')
+
+@app.route("/manga/<int:manga_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_manga(manga_id):
+    post = Manga.query.get_or_404(manga_id)
+    form = UpdateManga()
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.premiered=form.premiered.data
+        post.status = form.status.data
+        post.rating = form.rating.data
+        post.author = form.author.data
+        db.session.commit()
+        flash('Your post has been updated!', 'success')
+        return redirect(url_for('manga'))
+    elif request.method == 'GET':
+        form.title.data = post.title
+        form.premiered.data = post.premiered
+        form.status.data = post.status
+        form.rating.data = post.rating
+        form.author.data = post.author
+    return render_template('addmanga.html', title='Update Post',
+                           form=form, legend='Update Post')
+
+
+@app.route("/manga/<int:manga_id>/delete", methods=['POST'])
+@login_required
+def delete_manga(manga_id):
+    post = Manga.query.get_or_404(manga_id)
+    db.session.delete(post)
+    db.session.commit()
+    flash('Your post has been deleted!', 'success')
+    return redirect(url_for('manga'))
 
 @app.route("/about")
 def about():

@@ -9,7 +9,31 @@
 			<h1> Manga </h1>
 		</div>
 		<div class="container manga">
-			<h1> Manga cards go here lads </h1>
+				<table>
+						<tr>
+							<th>Title</th>
+							<th>Date Premiered</th>
+							<th>Status</th>
+							<th>Rating</th>
+							<th>Author</th>
+						</tr>
+								{% for post in manga %}
+								<tr>
+									<td>{{ post.title }}</td>
+									<td>{{ post.premiered }}</td>
+									<td>{{ post.status }}</td>
+									
+									<td>{{ post.rating }}</td>
+									<td>{{ post.author }}</td>
+									{% if current_user.is_authenticated %}
+									<td><a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_manga', manga_id=post.id) }}">Update</a></td>
+									<td><form action="{{ url_for('delete_manga', manga_id=post.id) }}" method="POST">
+										<input class="btn btn-danger" type="submit" value="Delete">
+									  </form></td>
+									{% endif %}
+								</tr>
+							{% endfor %}
+						</table>
 		</div>
       </div>
       <div class="col-md-1">
