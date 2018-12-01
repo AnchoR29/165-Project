@@ -17,7 +17,7 @@
 				<th>No. of Episodes</th>
 				<th>Rating</th>
 				<th>Studio</th>
-				<th></th>
+				<th>Genre</th>
 			</tr>
 					{% for post in anime %}
 					<tr>
@@ -27,6 +27,7 @@
 						<td>{{ post.episodes }}</td>
 						<td>{{ post.rating }}</td>
 						<td>{{ post.studio }}</td>
+						<td>{{ post.genre }}</td>
 						{% if current_user.is_authenticated %}
 						<td><a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_anime', anime_id=post.id) }}">Update</a></td>
 						<td><form action="{{ url_for('delete_anime', anime_id=post.id) }}" method="POST">

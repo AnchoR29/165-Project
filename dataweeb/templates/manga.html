@@ -16,6 +16,7 @@
 							<th>Status</th>
 							<th>Rating</th>
 							<th>Author</th>
+							<th>Genre</th>
 						</tr>
 								{% for post in manga %}
 								<tr>
@@ -25,6 +26,7 @@
 									
 									<td>{{ post.rating }}</td>
 									<td>{{ post.author }}</td>
+									<td>{{ post.genre }}</td>
 									{% if current_user.is_authenticated %}
 									<td><a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_manga', manga_id=post.id) }}">Update</a></td>
 									<td><form action="{{ url_for('delete_manga', manga_id=post.id) }}" method="POST">

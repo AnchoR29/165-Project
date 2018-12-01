@@ -59,6 +59,7 @@ class AddManga(FlaskForm):
     status = RadioField('Status',choices = [('Ongoing','Ongoing'),('Finished','Finished')],validators=[DataRequired()])
     rating = IntegerField('Rating',validators=[DataRequired()])
     author = StringField('Author')
+    genre = StringField('Genre')
     submit = SubmitField('Add')
 
     def validate_title(self, title):
@@ -75,6 +76,7 @@ class AddAnime(FlaskForm):
     episodes = IntegerField('Number of Episodes',validators=[DataRequired()])
     rating = IntegerField('Rating',validators=[DataRequired()])
     studio = StringField('Studio')
+    genre = StringField('Genre')
     submit = SubmitField('Add')
 
     def validate_title(self, title):
@@ -89,6 +91,7 @@ class UpdateManga(FlaskForm):
     status = RadioField('Status',choices = [('Ongoing','Ongoing'),('Finished','Finished')],validators=[DataRequired()])
     rating = IntegerField('Rating',validators=[DataRequired()])
     author = StringField('Author')
+    genre = StringField('Genre')
     submit = SubmitField('Update')
 
 
@@ -99,6 +102,7 @@ class UpdateAnime(FlaskForm):
     episodes = IntegerField('Number of Episodes',validators=[DataRequired()])
     rating = IntegerField('Rating',validators=[DataRequired()])
     studio = StringField('Studio')
+    genre = StringField('Genre')
     submit = SubmitField('Update')
 
 

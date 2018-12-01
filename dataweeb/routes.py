@@ -4,7 +4,7 @@ from PIL import Image
 from flask import render_template, url_for, flash, redirect, request, abort
 from dataweeb import app, db, bcrypt
 from dataweeb.forms import *
-from dataweeb.models import User,Anime, Manga
+from dataweeb.models import User, Anime, Manga
 from flask_login import login_user, current_user, logout_user, login_required
 
 
@@ -89,7 +89,7 @@ def anime():
 def new_anime():
     form = AddAnime()
     if form.validate_on_submit():
-        post = Anime(title=form.title.data, premiered=form.premiered.data, anime_type = form.anime_type.data, episodes=form.episodes.data, rating = form.rating.data, studio = form.studio.data )
+        post = Anime(title=form.title.data, premiered=form.premiered.data, anime_type = form.anime_type.data, episodes=form.episodes.data, rating = form.rating.data, studio = form.studio.data, genre = form.genre.data )
         db.session.add(post)
         db.session.commit()
         flash('Your post has been created!', 'success')
@@ -109,6 +109,7 @@ def update_anime(anime_id):
         post.episodes=form.episodes.data
         post.rating = form.rating.data
         post.studio = form.studio.data
+        post.genre = form.genre.data
         db.session.commit()
         flash('Your post has been updated!', 'success')
         return redirect(url_for('anime'))
@@ -119,6 +120,7 @@ def update_anime(anime_id):
         form.episodes.data = post.episodes
         form.rating.data = post.rating
         form.studio.data = post.studio
+        form.genre.data = post.genre
     return render_template('addanime.html', title='Update Post',
                            form=form, legend='Update Post')
 
@@ -143,7 +145,7 @@ def manga():
 def new_manga():
     form = AddManga()
     if form.validate_on_submit():
-        post = Manga(title=form.title.data, premiered=form.premiered.data, status = form.status.data, rating = form.rating.data, author = form.author.data )
+        post = Manga(title=form.title.data, premiered=form.premiered.data, status = form.status.data, rating = form.rating.data, author = form.author.data, genre = form.genre.data )
         db.session.add(post)
         db.session.commit()
         flash('Your post has been created!', 'success')
@@ -162,6 +164,7 @@ def update_manga(manga_id):
         post.status = form.status.data
         post.rating = form.rating.data
         post.author = form.author.data
+        post.genre = form.genre.data
         db.session.commit()
         flash('Your post has been updated!', 'success')
         return redirect(url_for('manga'))
@@ -171,6 +174,7 @@ def update_manga(manga_id):
         form.status.data = post.status
         form.rating.data = post.rating
         form.author.data = post.author
+        form.genre.data = post.genre
     return render_template('addmanga.html', title='Update Post',
                            form=form, legend='Update Post')
 
