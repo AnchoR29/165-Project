@@ -8,7 +8,7 @@ from dataweeb.models import User, Anime, Manga, Episodes
 from flask_login import login_user, current_user, logout_user, login_required
 
 
-@app.route("/")
+@app.route("/", methods=['GET','POST'])
 @app.route("/index", methods=['GET','POST'])
 def index():
     anime = Anime.query.all()
