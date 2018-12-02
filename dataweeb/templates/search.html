@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block content %}
+{% for post in results %}
+<tr>
+    <td><a class="btn btn-outline-primary btn-sm mt-1 mb-1" href="{{ url_for('viewepisode', anime_id=post.id) }}">{{post.title}}</a></td>
+    <td>{{ post.premiered }}</td>
+    <td>{{ post.anime_type }}</td>
+    <td>{{ post.rating }}</td>
+    <td>{{ post.studio }}</td>
+    <td>{{ post.genre }}</td>
+    {% if current_user.is_authenticated %}
+    <td><a class="btn btn-outline-warning btn-sm mt-1 mb-1 update" href="{{ url_for('update_anime', anime_id=post.id) }}">Update</a></td>
+    <td><form action="{{ url_for('delete_anime', anime_id=post.id) }}" method="POST">
+        <input class="btn btn-outline-danger btn-sm mt-1 mb-1 delete" type="submit" value="Delete">
+      </form></td>
+    {% endif %}
+</tr>
+{% endfor %}
+{% endblock content %}

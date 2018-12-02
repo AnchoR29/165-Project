@@ -107,8 +107,12 @@ class UpdateAnime(FlaskForm):
 
 
 class AddEpisode(FlaskForm):
-    no = IntegerField('Email',validators=[DataRequired()])
+    no = IntegerField('Episode Number',validators=[DataRequired()])
     title = StringField('Episode Title', validators=[DataRequired()])
     premiered = StringField('Date Premiered (MM-DD-YYYY)',validators=[DataRequired(), Regexp('^(1[0-2]|0[1-9])-(3[01]|[12][0-9]|0[1-9])-[0-9]{4}$')])
     submit = SubmitField('Add')
+
+class Search(FlaskForm):
+    query = StringField('Search', validators=[DataRequired()])
+    submit = SubmitField('Search')
 

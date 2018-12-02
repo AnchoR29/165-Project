@@ -9,13 +9,22 @@ from flask_login import login_user, current_user, logout_user, login_required
 
 
 @app.route("/")
-@app.route("/index")
+@app.route("/index", methods=['GET','POST'])
 def index():
     anime = Anime.query.all()
-    return render_template('index.html', title='Index',anime=anime)
+    search = Search()
+    if search.validate_on_submit():
+        query = search.query.data
+        return redirect(url_for('search', query = query))
+
+    return render_template('index.html', title='Index',anime=anime,search=search)
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
+    search = Search()
+    if search.validate_on_submit():
+        query = search.query.data
+        return redirect(url_for('search', query = query))
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = LoginForm()
@@ -27,10 +36,14 @@ def login():
             return redirect(next_page) if next_page else redirect(url_for('account'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
-    return render_template('login.html', title='Login', form=form)
+    return render_template('login.html', title='Login', form=form,search=search)
 
 @app.route("/signup", methods=['GET', 'POST'])
 def signup():
+    search = Search()
+    if search.validate_on_submit():
+        query = search.query.data
+        return redirect(url_for('search', query = query))
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_pw = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
@@ -39,7 +52,7 @@ def signup():
         db.session.commit()
         flash(f'Account created for {form.username.data}! You can now Log In', 'success')
         return redirect(url_for('login'))
-    return render_template('signup.html', title='Sign Up', form=form)
+    return render_template('signup.html', title='Sign Up', form=form,search=search)
 
 @app.route("/logout")
 def logout():
@@ -64,6 +77,10 @@ def save_picture(form_picture):
 @login_required
 def account():
     form = UpdateAccountForm()
+    search = Search()
+    if search.validate_on_submit():
+        query = search.query.data
+        return redirect(url_for('search', query = query))
     if form.validate_on_submit():
         if form.picture.data:
             picture_file = save_picture(form.picture.data)
@@ -78,12 +95,16 @@ def account():
         form.email.data = current_user.email
     image_file = url_for('static', filename='ppics/' + current_user.image_file)
     return render_template('account.html', title='Account',
-                           image_file=image_file, form=form)
+                           image_file=image_file, form=form,search=search)
 
-@app.route("/anime")
+@app.route("/anime", methods=['GET', 'POST'])
 def anime():
     anime = Anime.query.all()
-    return render_template('anime.html', anime=anime)
+    search = Search()
+    if search.validate_on_submit():
+        query = search.query.data
+        return redirect(url_for('search', query = query))
+    return render_template('anime.html', anime=anime,search=search)
 
 @app.route("/anime/new", methods=['GET', 'POST'])
 @login_required
@@ -95,8 +116,12 @@ def new_anime():
         db.session.commit()
         flash('Your post has been created!', 'success')
         return redirect(url_for('anime'))
+    search = Search()
+    if search.validate_on_submit():
+        query = search.query.data
+        return redirect(url_for('search', query = query))
     return render_template('addanime.html', title='New Anime',
-                           form=form, legend='New Post')
+                           form=form, legend='New Post',search=search)
 
 @app.route("/anime/<int:anime_id>/update", methods=['GET', 'POST'])
 @login_required
@@ -120,8 +145,12 @@ def update_anime(anime_id):
         form.rating.data = post.rating
         form.studio.data = post.studio
         form.genre.data = post.genre
+    search = Search()
+    if search.validate_on_submit():
+        query = search.query.data
+        return redirect(url_for('search', query = query))
     return render_template('addanime.html', title='Update Post',
-                           form=form, legend='Update Post')
+                           form=form, legend='Update Post',search=search)
 
 
 @app.route("/anime/<int:anime_id>/delete", methods=['POST'])
@@ -136,16 +165,24 @@ def delete_anime(anime_id):
 
 #################################EPISODES##########################
 
-@app.route("/anime/<int:anime_id>")
+@app.route("/anime/<int:anime_id>", methods=['GET', 'POST'])
 def viewepisode(anime_id):
     anime = Anime.query.get_or_404(anime_id)
     episodes = Episodes.query.filter_by(anime_id = anime_id).order_by(Episodes.no)
-    return render_template('episodes.html', anime=anime,episodes = episodes)
+    search = Search()
+    if search.validate_on_submit():
+        query = search.query.data
+        return redirect(url_for('search', query = query))
+    return render_template('episodes.html', anime=anime,episodes = episodes,search=search)
 
 @app.route("/anime/<int:anime_id>/new", methods=['GET', 'POST'])
 @login_required
 def new_episode(anime_id):
     form = AddEpisode()
+    search = Search()
+    if search.validate_on_submit():
+        query = search.query.data
+        return redirect(url_for('search', query = query))
     if form.validate_on_submit():
         post = Episodes(title=form.title.data, premiered=form.premiered.data, no = form.no.data,anime_id = anime_id )
         db.session.add(post)
@@ -153,13 +190,17 @@ def new_episode(anime_id):
         flash('Your episode has been created!', 'success')
         return redirect(url_for('viewepisode', anime_id=post.anime_id))
     return render_template('addepisode.html', title='New Anime',
-                           form=form, legend='New Post')   
+                           form=form, legend='New Post',search=search)   
 
 @app.route("/anime/<int:anime_id>/update/<int:episode_id>", methods=['GET', 'POST'])
 @login_required
 def update_episode(anime_id,episode_id):
     post = Episodes.query.get_or_404(episode_id)
     form = AddEpisode()
+    search = Search()
+    if search.validate_on_submit():
+        query = search.query.data
+        return redirect(url_for('search', query = query))
     if form.validate_on_submit():
         post.title = form.title.data
         post.premiered=form.premiered.data
@@ -172,7 +213,7 @@ def update_episode(anime_id,episode_id):
         form.premiered.data = post.premiered
         form.no.data = post.no
     return render_template('addepisode.html', title='Update Post',
-                           form=form, legend='Update Post')
+                           form=form, legend='Update Post',search=search)
 
 
 @app.route("/anime/<int:anime_id>/delete/<int:episode_id>", methods=['POST'])
@@ -185,15 +226,23 @@ def delete_episode(anime_id,episode_id):
     return redirect(url_for('viewepisode', anime_id=post.anime_id))
 
 
-@app.route("/manga")
+@app.route("/manga", methods=['GET', 'POST'])
 def manga():
     manga = Manga.query.all()
-    return render_template('manga.html', manga=manga)  
+    search = Search()
+    if search.validate_on_submit():
+        query = search.query.data
+        return redirect(url_for('search', query = query))
+    return render_template('manga.html', manga=manga,search=search)  
 
 @app.route("/manga/new", methods=['GET', 'POST'])
 @login_required
 def new_manga():
     form = AddManga()
+    search = Search()
+    if search.validate_on_submit():
+        query = search.query.data
+        return redirect(url_for('search', query = query))
     if form.validate_on_submit():
         post = Manga(title=form.title.data, premiered=form.premiered.data, status = form.status.data, rating = form.rating.data, author = form.author.data, genre = form.genre.data )
         db.session.add(post)
@@ -201,12 +250,16 @@ def new_manga():
         flash('Your post has been created!', 'success')
         return redirect(url_for('manga'))
     return render_template('addmanga.html', title='New Manga',
-                           form=form, legend='New Post')
+                           form=form, legend='New Post',search=search)
 
 @app.route("/manga/<int:manga_id>/update", methods=['GET', 'POST'])
 @login_required
 def update_manga(manga_id):
     post = Manga.query.get_or_404(manga_id)
+    search = Search()
+    if search.validate_on_submit():
+        query = search.query.data
+        return redirect(url_for('search', query = query))
     form = UpdateManga()
     if form.validate_on_submit():
         post.title = form.title.data
@@ -226,7 +279,7 @@ def update_manga(manga_id):
         form.author.data = post.author
         form.genre.data = post.genre
     return render_template('addmanga.html', title='Update Post',
-                           form=form, legend='Update Post')
+                           form=form, legend='Update Post',search=search)
 
 
 @app.route("/manga/<int:manga_id>/delete", methods=['POST'])
@@ -238,6 +291,19 @@ def delete_manga(manga_id):
     flash('Your post has been deleted!', 'success')
     return redirect(url_for('manga'))
 
-@app.route("/about")
+@app.route("/search/<string:query>", methods=['GET', 'POST'])
+def search(query):
+    search = Search()
+    if search.validate_on_submit():
+        query = search.query.data
+        return redirect(url_for('search', query = query))
+    results = Anime.query.filter(Anime.title.like(query)).all()
+    return render_template('search.html', results=results, search=search)
+
+@app.route("/about", methods=['GET', 'POST'])
 def about():
-    return render_template('about.html')
+    search = Search()
+    if search.validate_on_submit():
+        query = search.query.data
+        return redirect(url_for('search', query = query))
+    return render_template('about.html',search=search)
