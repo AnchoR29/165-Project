@@ -14,6 +14,9 @@
 				<th>Episode Number</th>
 				<th>Episode Title</th>
 				<th>Date Premiered</th>
+				{% if current_user.is_authenticated %}
+				<th><a class="ml-2" href="{{ url_for('new_episode', anime_id = anime.id) }}">Add Episode</a></th>
+				{%endif%}
 			</tr>
 			{% for post in episodes %}
 					<tr>
@@ -21,20 +24,15 @@
 						<td>{{ post.title }}</td>
 						<td>{{ post.premiered }}</td>
 						{% if current_user.is_authenticated %}
-						<td><a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_episode',anime_id = post.anime_id, episode_id=post.id) }}">Update</a></td>
+						<td><a class="btn btn-outline-warning btn-sm mt-1 mb-1 update" href="{{ url_for('update_episode',anime_id = post.anime_id, episode_id=post.id) }}">Update</a></td>
 						<td><form action="{{ url_for('delete_episode', episode_id=post.id,anime_id = post.anime_id) }}" method="POST">
-							<input class="btn btn-danger" type="submit" value="Delete">
+							<input class="btn btn-outline-danger btn-sm mt-1 mb-1 delete" type="submit" value="Delete">
 						  </form></td>
 						{% endif %}
 					</tr>
 				{% endfor %}
 			</table>
 		</div>
-		{% if current_user.is_authenticated %}
-		<small class="text-muted">
-			Episode not Existing <a class="ml-2" href="{{ url_for('new_episode', anime_id = anime.id) }}">Add Episode</a>
-	</small>
-	{%endif%}
       </div>
       <div class="col-md-1">
 	  </div>

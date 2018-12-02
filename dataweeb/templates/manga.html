@@ -28,14 +28,17 @@
 									<td>{{ post.author }}</td>
 									<td>{{ post.genre }}</td>
 									{% if current_user.is_authenticated %}
-									<td><a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_manga', manga_id=post.id) }}">Update</a></td>
+									<td><a class="btn btn-outline-warning btn-sm mt-1 mb-1 update" href="{{ url_for('update_manga', manga_id=post.id) }}">Update</a></td>
 									<td><form action="{{ url_for('delete_manga', manga_id=post.id) }}" method="POST">
-										<input class="btn btn-danger" type="submit" value="Delete">
+										<input class="btn btn-outline-danger btn-sm mt-1 mb-1 delete" type="submit" value="Delete">
 									  </form></td>
 									{% endif %}
 								</tr>
 							{% endfor %}
 						</table>
+		</div>
+		<div class="container quote">
+			<h4>“The true measure of a shinobi is not how he lives but how he dies. It’s not what they do in life but what they did before dying that proves their worth." - Jiraiya, Naruto</h4>
 		</div>
       </div>
       <div class="col-md-1">
