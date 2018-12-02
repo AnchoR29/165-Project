@@ -4,14 +4,15 @@ from PIL import Image
 from flask import render_template, url_for, flash, redirect, request, abort
 from dataweeb import app, db, bcrypt
 from dataweeb.forms import *
-from dataweeb.models import User, Anime, Manga
+from dataweeb.models import User, Anime, Manga, Episodes
 from flask_login import login_user, current_user, logout_user, login_required
 
 
 @app.route("/")
 @app.route("/index")
 def index():
-    return render_template('index.html', title='Index')
+    anime = Anime.query.all()
+    return render_template('index.html', title='Index',anime=anime)
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -89,7 +90,7 @@ def anime():
 def new_anime():
     form = AddAnime()
     if form.validate_on_submit():
-        post = Anime(title=form.title.data, premiered=form.premiered.data, anime_type = form.anime_type.data, episodes=form.episodes.data, rating = form.rating.data, studio = form.studio.data, genre = form.genre.data )
+        post = Anime(title=form.title.data, premiered=form.premiered.data, anime_type = form.anime_type.data, rating = form.rating.data, studio = form.studio.data, genre = form.genre.data )
         db.session.add(post)
         db.session.commit()
         flash('Your post has been created!', 'success')
@@ -106,7 +107,6 @@ def update_anime(anime_id):
         post.title = form.title.data
         post.premiered=form.premiered.data
         post.anime_type = form.anime_type.data
-        post.episodes=form.episodes.data
         post.rating = form.rating.data
         post.studio = form.studio.data
         post.genre = form.genre.data
@@ -117,7 +117,6 @@ def update_anime(anime_id):
         form.title.data = post.title
         form.premiered.data = post.premiered
         form.anime_type.data = post.anime_type
-        form.episodes.data = post.episodes
         form.rating.data = post.rating
         form.studio.data = post.studio
         form.genre.data = post.genre
@@ -133,6 +132,57 @@ def delete_anime(anime_id):
     db.session.commit()
     flash('Your post has been deleted!', 'success')
     return redirect(url_for('anime'))
+
+
+#################################EPISODES##########################
+
+@app.route("/anime/<int:anime_id>")
+def viewepisode(anime_id):
+    anime = Anime.query.get_or_404(anime_id)
+    episodes = Episodes.query.filter_by(anime_id = anime_id).order_by(Episodes.no)
+    return render_template('episodes.html', anime=anime,episodes = episodes)
+
+@app.route("/anime/<int:anime_id>/new", methods=['GET', 'POST'])
+@login_required
+def new_episode(anime_id):
+    form = AddEpisode()
+    if form.validate_on_submit():
+        post = Episodes(title=form.title.data, premiered=form.premiered.data, no = form.no.data,anime_id = anime_id )
+        db.session.add(post)
+        db.session.commit()
+        flash('Your episode has been created!', 'success')
+        return redirect(url_for('viewepisode', anime_id=post.anime_id))
+    return render_template('addepisode.html', title='New Anime',
+                           form=form, legend='New Post')   
+
+@app.route("/anime/<int:anime_id>/update/<int:episode_id>", methods=['GET', 'POST'])
+@login_required
+def update_episode(anime_id,episode_id):
+    post = Episodes.query.get_or_404(episode_id)
+    form = AddEpisode()
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.premiered=form.premiered.data
+        post.no = form.no.data
+        db.session.commit()
+        flash('Your post has been updated!', 'success')
+        return redirect(url_for('viewepisode', anime_id=post.anime_id))
+    elif request.method == 'GET':
+        form.title.data = post.title
+        form.premiered.data = post.premiered
+        form.no.data = post.no
+    return render_template('addepisode.html', title='Update Post',
+                           form=form, legend='Update Post')
+
+
+@app.route("/anime/<int:anime_id>/delete/<int:episode_id>", methods=['POST'])
+@login_required
+def delete_episode(anime_id,episode_id):
+    post = Episodes.query.get_or_404(episode_id)
+    db.session.delete(post)
+    db.session.commit()
+    flash('Your post has been deleted!', 'success')
+    return redirect(url_for('viewepisode', anime_id=post.anime_id))
 
 
 @app.route("/manga")

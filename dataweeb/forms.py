@@ -1,9 +1,10 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, RadioField
-from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, RadioField, DateField
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, Regexp
 from dataweeb.models import User, Anime, Manga
+from datetime import datetime
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username',
@@ -55,7 +56,7 @@ class UpdateAccountForm(FlaskForm):
 
 class AddManga(FlaskForm):
     title = StringField('Title',validators=[DataRequired()])
-    premiered = StringField('Date Premiered',validators=[DataRequired()])
+    premiered = StringField('Date Premiered (MM-DD-YYYY)',validators=[DataRequired(), Regexp('^(1[0-2]|0[1-9])-(3[01]|[12][0-9]|0[1-9])-[0-9]{4}$')])
     status = RadioField('Status',choices = [('Ongoing','Ongoing'),('Finished','Finished')],validators=[DataRequired()])
     rating = IntegerField('Rating',validators=[DataRequired()])
     author = StringField('Author')
@@ -71,9 +72,9 @@ class AddManga(FlaskForm):
 
 class AddAnime(FlaskForm):
     title = StringField('Title',validators=[DataRequired()])
-    premiered = StringField('Date Premiered',validators=[DataRequired()])
+    premiered = StringField('Date Premiered (MM-DD-YYYY)',validators=[DataRequired(), Regexp('^(1[0-2]|0[1-9])-(3[01]|[12][0-9]|0[1-9])-[0-9]{4}$')])
     anime_type = RadioField('Anime Type',choices = [('TV','TV'),('OVA','OVA'),('Movie','Movie'),('Special','Special'),('ONA','ONA')],validators=[DataRequired()])
-    episodes = IntegerField('Number of Episodes',validators=[DataRequired()])
+
     rating = IntegerField('Rating',validators=[DataRequired()])
     studio = StringField('Studio')
     genre = StringField('Genre')
@@ -87,7 +88,7 @@ class AddAnime(FlaskForm):
 
 class UpdateManga(FlaskForm):
     title = StringField('Title',validators=[DataRequired()])
-    premiered = StringField('Date Premiered',validators=[DataRequired()])
+    premiered = StringField('Date Premiered (MM-DD-YYYY)',validators=[DataRequired(), Regexp('^(1[0-2]|0[1-9])-(3[01]|[12][0-9]|0[1-9])-[0-9]{4}$')])
     status = RadioField('Status',choices = [('Ongoing','Ongoing'),('Finished','Finished')],validators=[DataRequired()])
     rating = IntegerField('Rating',validators=[DataRequired()])
     author = StringField('Author')
@@ -97,12 +98,17 @@ class UpdateManga(FlaskForm):
 
 class UpdateAnime(FlaskForm):
     title = StringField('Title',validators=[DataRequired()])
-    premiered = StringField('Date Premiered',validators=[DataRequired()])
+    premiered = StringField('Date Premiered (MM-DD-YYYY)',validators=[DataRequired(), Regexp('^(1[0-2]|0[1-9])-(3[01]|[12][0-9]|0[1-9])-[0-9]{4}$')])
     anime_type = RadioField('Anime Type',choices = [('TV','TV'),('OVA','OVA'),('Movie','Movie'),('Special','Special'),('ONA','ONA')],validators=[DataRequired()])
-    episodes = IntegerField('Number of Episodes',validators=[DataRequired()])
     rating = IntegerField('Rating',validators=[DataRequired()])
     studio = StringField('Studio')
     genre = StringField('Genre')
     submit = SubmitField('Update')
 
+
+class AddEpisode(FlaskForm):
+    no = IntegerField('Email',validators=[DataRequired()])
+    title = StringField('Episode Title', validators=[DataRequired()])
+    premiered = StringField('Date Premiered (MM-DD-YYYY)',validators=[DataRequired(), Regexp('^(1[0-2]|0[1-9])-(3[01]|[12][0-9]|0[1-9])-[0-9]{4}$')])
+    submit = SubmitField('Add')
 

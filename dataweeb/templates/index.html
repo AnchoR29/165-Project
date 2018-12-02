@@ -19,6 +19,17 @@
 				<th>Studio</th>
 				<th>Genre</th>
 			</tr>
+			{% for post in anime %}
+					<tr>
+						<td>{{ post.title }}</td>
+						<td>{{ post.premiered }}</td>
+						<td>{{ post.anime_type }}</td>
+						<td>{{ post.episodes }}</td>
+						<td>{{ post.rating }}</td>
+						<td>{{ post.studio }}</td>
+						<td>{{ post.genre }}</td>
+					</tr>
+				{% endfor %}
 			</table>
 			
 		</div>

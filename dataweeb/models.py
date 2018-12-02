@@ -30,7 +30,6 @@ class Anime(db.Model):
     title = db.Column(db.String(50), unique=True, nullable = False)
     premiered = db.Column(db.String(10),  nullable = False)
     anime_type = db.Column(db.String(10), nullable = False)
-    episodes = db.Column(db.Integer)
     rating = db.Column(db.Integer)
     studio = db.Column(db.String(50), db.ForeignKey('studio.name'), nullable=True)
     genre = db.Column(db.String(50), db.ForeignKey('genre.name'), nullable=True)
@@ -45,7 +44,7 @@ class Manga(db.Model):
     premiered = db.Column(db.String(10),  nullable = False)
     status = db.Column(db.String(20), nullable = False)
     rating = db.Column(db.Integer)
-    author = db.Column(db.Integer, db.ForeignKey('author.name'), nullable=True)
+    author = db.Column(db.String, db.ForeignKey('author.name'), nullable=True)
     genre = db.Column(db.String(50), db.ForeignKey('genre.name'), nullable=True)
 
 
@@ -63,4 +62,15 @@ class Studio(db.Model):
     produced = db.relationship('Anime', backref='producer', lazy = True)
     def __repr__(self):
         return f"Studio('{self.name}')"
+
+class Episodes(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    no = db.Column(db.Integer, nullable = False)
+    title = db.Column(db.String(50), unique=False, nullable = False)
+    premiered = db.Column(db.String(10),  nullable = False)
+    anime_id = db.Column(db.Integer, db.ForeignKey('anime.id'), nullable=False)
+
+
+    def __repr__(self):
+        return f"Episode('{self.title}')"
 

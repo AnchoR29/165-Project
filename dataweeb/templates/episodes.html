@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block content %}
+	<div class="row">
+	  <div class="col-md-1">
+	  </div>
+	  <div class="col-md-10">
+	  	<div class="container anime">
+			<h1> {{anime.title}} </h1>
+		</div>
+		<div class="container announcements">
+			<table class="boardTable">
+			<tr>
+				<th>Episode Number</th>
+				<th>Episode Title</th>
+				<th>Date Premiered</th>
+			</tr>
+			{% for post in episodes %}
+					<tr>
+						<td>{{ post.no }}</td>
+						<td>{{ post.title }}</td>
+						<td>{{ post.premiered }}</td>
+						{% if current_user.is_authenticated %}
+						<td><a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_episode',anime_id = post.anime_id, episode_id=post.id) }}">Update</a></td>
+						<td><form action="{{ url_for('delete_episode', episode_id=post.id,anime_id = post.anime_id) }}" method="POST">
+							<input class="btn btn-danger" type="submit" value="Delete">
+						  </form></td>
+						{% endif %}
+					</tr>
+				{% endfor %}
+			</table>
+		</div>
+		{% if current_user.is_authenticated %}
+		<small class="text-muted">
+			Episode not Existing <a class="ml-2" href="{{ url_for('new_episode', anime_id = anime.id) }}">Add Episode</a>
+	</small>
+	{%endif%}
+      </div>
+      <div class="col-md-1">
+	  </div>
+    </div>
+{% endblock content %}

@@ -14,17 +14,15 @@
 				<th>Title</th>
 				<th>Date Premiered</th>
 				<th>Anime Type</th>
-				<th>No. of Episodes</th>
 				<th>Rating</th>
 				<th>Studio</th>
 				<th>Genre</th>
 			</tr>
 					{% for post in anime %}
 					<tr>
-						<td>{{ post.title }}</td>
+						<td><a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('viewepisode', anime_id=post.id) }}">{{post.title}}</a></td>
 						<td>{{ post.premiered }}</td>
 						<td>{{ post.anime_type }}</td>
-						<td>{{ post.episodes }}</td>
 						<td>{{ post.rating }}</td>
 						<td>{{ post.studio }}</td>
 						<td>{{ post.genre }}</td>
