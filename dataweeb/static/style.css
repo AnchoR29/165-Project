@@ -99,6 +99,14 @@
   max-width: 50%;
 }
 
+.aboutcontent {
+  margin-top: 5%;
+  margin-left: 5%;
+  font-style: italic;
+  color: black;
+  width: 50%;
+}
+
 table {
   margin-bottom: 2%;
   margin-top: 2%;
